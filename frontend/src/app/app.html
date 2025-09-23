@@ -1,0 +1,57 @@
+<!--navbar-->
+<div class="magicpattern"></div>
+
+<nav class="navbar navbar-expand-lg" *ngIf="isLoggedIn">
+    <div class="container-fluid">
+        <img class="navbar-brand" src="assets/images/logo2.png" />
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link " style="font-weight: 600; color: #2e7d32; margin-left:-0.5rem">healthiCode</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link" routerLink="/home" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">
+                        Home
+                    </a>
+                    <a class="nav-link" routerLink="/scan" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{ exact: true }">
+                        Scan
+                    </a>
+                    <a class="nav-link" routerLink="/home" fragment="features"
+                        [class.active]="activeFragment === 'features'" (click)="setActive('features')">
+                        Features
+                    </a>
+
+                    <a class="nav-link" routerLink="/home" fragment="problem"
+                        [class.active]="activeFragment === 'problem'" (click)="setActive('problem')">
+                        Why HealthiCode
+                    </a>
+
+                    <a class="nav-link" routerLink="/home" fragment="trust" [class.active]="activeFragment === 'trust'"
+                        (click)="setActive('trust')">
+                        Our Promise
+                    </a>
+
+
+
+                </div>
+
+                <button  data-bs-toggle="tooltip" title="User Profile" (click)="openUserDialog()">
+                    <i class="bi bi-person"></i>
+                </button>
+                <button data-bs-toggle="tooltip" title="Logout"  (click)="logout()" style="margin-left: 1rem;">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+
+<router-outlet></router-outlet>
