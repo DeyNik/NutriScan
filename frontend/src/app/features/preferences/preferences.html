@@ -1,0 +1,82 @@
+<div class="container my-5">
+  <div class="card shadow-lg rounded-4 border-0">
+    <div class="card-body p-4">
+
+      <!-- Heading -->
+      <h2 class="text-center mb-4 fw-bold" style="color:#2e7d32;">
+        Set Your Preferences
+      </h2>
+
+      <!-- Diet Type -->
+      <div class="mb-4">
+        <h5 class="fw-semibold" style="color:#2e7d32;">Diet Type <span class="text-danger">*</span></h5>
+        <select class="form-select border-success" [(ngModel)]="diet" required
+          [ngClass]="{'is-invalid': showError && !diet}">
+          <option value="">-- Select --</option>
+          <option *ngFor="let d of diets" [value]="d">{{ d }}</option>
+        </select>
+
+        <!-- Error message -->
+        <div *ngIf="showError && !diet" class="text-danger mt-1">
+          Please select a diet type before continuing.
+        </div>
+      </div>
+
+
+      <!-- Allergies -->
+<div class="mb-4">
+  <h5 class="fw-semibold" style="color:#2e7d32;">Allergies</h5>
+
+  <!-- Predefined options -->
+  <div class="form-check" *ngFor="let a of allergyOptions">
+    <input class="form-check-input border-success" type="checkbox" [checked]="allergies.includes(a)"
+      (change)="toggleSelection(allergies, a)" id="{{a}}" />
+    <label class="form-check-label" [for]="a">{{a}}</label>
+  </div>
+
+  <!-- Custom input -->
+  <div class="d-flex mt-2">
+    <input type="text" class="form-control border-success me-2" placeholder="Other allergy"
+      [(ngModel)]="customAllergy" (keyup.enter)="addCustom(allergies, customAllergy, 'allergy')" />
+    <button type="button" class="btn btn-outline-success" (click)="addCustom(allergies, customAllergy, 'allergy')">
+      Add
+    </button>
+  </div>
+</div>
+
+
+<!-- Health Concerns -->
+<div class="mb-4">
+  <h5 class="fw-semibold" style="color:#2e7d32;">Health Concerns</h5>
+
+  <!-- Predefined options -->
+  <div class="form-check" *ngFor="let h of healthOptions">
+    <input class="form-check-input border-success" type="checkbox" [checked]="healthConcerns.includes(h)"
+      (change)="toggleSelection(healthConcerns, h)" id="{{h}}" />
+    <label class="form-check-label" [for]="h">{{h}}</label>
+  </div>
+
+  <!-- Custom input -->
+  <div class="d-flex mt-2">
+    <input type="text" class="form-control border-success me-2" placeholder="Other health concern"
+      [(ngModel)]="customHealthConcern" (keyup.enter)="addCustom(healthConcerns, customHealthConcern, 'health')" />
+    <button type="button" class="btn btn-outline-success"
+      (click)="addCustom(healthConcerns, customHealthConcern, 'health')">
+      Add
+    </button>
+  </div>
+</div>
+
+
+      <!-- Save Button -->
+      <div class="d-grid" style="
+    width: 22%;
+    float: inline-end;">
+        <button class=" btn btn-success btn-lg rounded-pill fw-semibold" (click)="savePreferences()">
+          Save & Continue
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

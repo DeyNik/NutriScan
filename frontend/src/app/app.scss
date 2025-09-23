@@ -1,0 +1,40 @@
+.magicpattern { 
+    position: absolute;
+   width: 30%;
+    height: 68%;
+        top: -5rem;
+
+  background-size: cover;
+  background-position: center center;
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox=%220 0 1000 1000%22 xmlns=%22http:%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cdefs%3E%3CclipPath id=%22a%22%3E%3Cpath fill=%22currentColor%22 d=%22M836.5 685.5Q796 871 605 873.5T235 795Q56 714 57.5 501t168-343Q392 28 564 116t242.5 236q70.5 148 30 333.5Z%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3Cg clip-path=%22url(%23a)%22%3E%3Cpath fill=%22%23edfbe9%22 d=%22M836.5 685.5Q796 871 605 873.5T235 795Q56 714 57.5 501t168-343Q392 28 564 116t242.5 236q70.5 148 30 333.5Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+}
+
+.container-fluid {
+    font-weight: 500;
+    padding: 0rem 1.5rem 0rem 1.5rem;
+    align-items: center;
+    font-size: large;
+    position: relative;
+
+    .navbar-brand {
+        width: 30px;
+        margin: 0.5rem;
+    }
+
+    .navbar-nav {
+        a {
+            margin-right: .5rem;
+        }
+    }
+
+    .nav-link.active {
+        font-weight: 700;
+        color: #ff9800 !important; // highlight in secondary orange
+    }
+
+    i {
+        font-size: 24px;
+    }
+
+}
