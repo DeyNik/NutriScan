@@ -19,10 +19,10 @@ export class OnboardingGuard {
           if (snapshot.exists()) {
             const data = snapshot.data();
             if (data['onboardingComplete']) {
-              resolve(true); // ✅ onboarding done → go home
+              resolve(true); // onboarding done → go home
             } else {
               this.router.navigate(['/preferences']);
-              resolve(false); // 🚧 redirect if onboarding incomplete
+              resolve(false); // redirect if onboarding incomplete
             }
           } else {
             this.router.navigate(['/login']);

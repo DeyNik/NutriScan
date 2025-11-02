@@ -45,7 +45,6 @@ export class AuthService {
               uid: user.uid,
               email: user.email,
               displayName: user.displayName,
-              photoURL: user.photoURL,
               onboardingComplete: data.onboardingComplete ?? false,
               preferences: data.preferences,
               createdAt: data.createdAt
@@ -63,7 +62,6 @@ export class AuthService {
               uid: user.uid,
               email: user.email,
               displayName: user.displayName,
-              photoURL: user.photoURL,
               onboardingComplete: false,
             };
             this.user$.next(authUser);
@@ -75,7 +73,7 @@ export class AuthService {
     });
   }
 
-  // 🔑 Login
+  // Login
   login(email: string, password: string) {
     return signInWithEmailAndPassword(this.auth, email, password);
   }
@@ -99,16 +97,16 @@ signup(email: string, password: string, name: string) {
   );
 }
 
-  // 🔄 Reset password
+  // Reset password
   resetPassword(email: string) {
     return sendPasswordResetEmail(this.auth, email);
   }
 
-  // 🚪 Logout
+  // Logout
   logout() {
     return signOut(this.auth).then(() => {
       this.user$.next(null); // clear local state
-      console.log('👋 User signed out');
+      console.log('User signed out');
     });
   }
 }

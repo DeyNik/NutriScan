@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ProductService } from '../../services/product-service';
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-scanner',
-  imports: [JsonPipe, CommonModule],
+  imports: [CommonModule],
   templateUrl: './scanner.html',
   styleUrl: './scanner.scss'
 })

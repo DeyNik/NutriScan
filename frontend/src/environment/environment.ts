@@ -12,5 +12,8 @@ export const environment = {
     openAI: {
         model:"gemini-2.5-flash",
         apiKey:"AIzaSyB7g9br7w8Cx71kTxMMuty1kKqZUd-CrBI"
-    }
+    },
+    rapidApiKey:"test",//"1c2a563ed9mshdd411b54d2bfa51p19e309jsn4ed9994d8724",
+    youtubeApiKey:"AIzaSyBYTmE1QzCNNFuTk-O0SYXmDq-d2Q-L0vM"
 };
+
