@@ -1,22 +1,13 @@
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product-service';
-import { Observable, Subscription } from 'rxjs';
+import { forkJoin, from, Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth-service';
 import { AiService } from '../../services/ai-service';
 import { productInfo } from '../../core/model/product.model';
-
-interface AiAnalysis {
-  score: number; // 0–100%
-  color: 'primary' | 'accent' | 'warn';
-  nutrients: { name: string; percent: number; levelColor: 'primary' | 'accent' | 'warn' }[];
-  dietBadges: { label: string; type: string }[];
-  advice: string;
-  ingredients: { name: string; type: 'safe' | 'caution' | 'avoid' }[];
-  alerts: string[];
-  summary: string;
-  alternatives?: any[];
-}
+import { OpenFoodFactsProduct } from '../../core/model/foodProduct.model';
+import { Router } from '@angular/router';
+import { AiAnalysis, ProductStateService } from '../../services/product-state-service';
 
 @Component({
   selector: 'app-scanner',
@@ -30,7 +21,7 @@ export class Scanner implements OnInit, OnDestroy {
   @ViewChild('aiAnalysisSection') aiAnalysisSection!: ElementRef;
 
   barcode: string | null = null;
-  product: any = null;
+  product: OpenFoodFactsProduct = null;
   aiAnalysis: AiAnalysis | null = null;
   scanning = false;
   notfound = false;
@@ -42,9 +33,11 @@ export class Scanner implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
+    private productStateService: ProductStateService,
     private authService: AuthService,
     private ngZone: NgZone,
-    private aiService: AiService
+    private aiService: AiService,
+    private router: Router
   ) { }
 
   ngAfterViewInit(): void {
@@ -59,12 +52,29 @@ export class Scanner implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Stop camera
-    if (this.videoElem.nativeElement.srcObject) {
-      (this.videoElem.nativeElement.srcObject as MediaStream).getTracks().forEach(track => track.stop());
+    try {
+      const videoEl = this.videoElem?.nativeElement;
+      if (videoEl?.srcObject) {
+        const stream = videoEl.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoEl.srcObject = null;
+      }
+    } catch (err) {
+      console.warn('Camera cleanup failed gracefully:', err);
     }
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+
+    // Clean up subscriptions safely
+    if (this.subscriptions?.length) {
+      this.subscriptions.forEach(sub => {
+        try {
+          sub.unsubscribe();
+        } catch (e) {
+          console.warn('Subscription cleanup failed:', e);
+        }
+      });
+    }
   }
+
 
   startCamera(): void {
     if (!this.videoElem) return;  // element might not exist yet
@@ -76,6 +86,7 @@ export class Scanner implements OnInit, OnDestroy {
       })
       .catch(err => console.error('Camera error', err));
   }
+
 
   captureFrameAndScan(): void {
     this.scanning = true;
@@ -109,6 +120,15 @@ export class Scanner implements OnInit, OnDestroy {
               this.scanning = false;
 
               if (this.product) {
+                // Store initial state (without AI analysis yet)
+                this.productStateService.setProductState({
+                  product: this.product,
+                  barcode: this.barcode,
+                  aiAnalysis: null,
+                  capturedFrame: this.capturedFrame
+                });
+
+                // Start AI analysis in background
                 this.analyzeProduct();
               } else {
                 this.notfound = true;
@@ -132,6 +152,55 @@ export class Scanner implements OnInit, OnDestroy {
     }, 'image/jpeg');
   }
 
+  analyzeProduct(): void {
+    const user = this.authService.user$.value;
+    const payload = {
+      product: this.product,
+      userPreferences: user?.preferences || {}
+    };
+
+    this.aiLoading = true;
+
+    forkJoin({
+      analysis: from(this.aiService.analyzeProduct(payload)),
+      recommendations: from(this.aiService.recommendProducts(payload))
+    })
+      .subscribe({
+        next: ({ analysis, recommendations }) => {
+          this.ngZone.run(() => {
+            // Merge both analysis and recommendation results safely
+            this.aiAnalysis = {
+              ...analysis,
+              alternatives: [
+                ...(analysis.alternatives || []),
+                ...(recommendations?.recommendations || [])
+              ],
+              videos: [
+                ...(analysis.videos || []),
+                ...(recommendations?.videos || [])
+              ]
+            };
+
+            // Persist the merged result to the product state
+            this.productStateService.updateAiAnalysis(this.aiAnalysis);
+          });
+        },
+        error: (err) => {
+          console.error('AI processing error', err);
+          this.aiLoading = false;
+        },
+        complete: () => {
+          this.aiLoading = false;
+        }
+      });
+  }
+
+  viewDetails(): void {
+    // Navigate to details page
+    // The ProductDetailsComponent will get data from the service
+    this.router.navigate(['/product-details']);
+  }
+
   resetScan(): void {
     this.barcode = null;
     this.product = null;
@@ -141,63 +210,30 @@ export class Scanner implements OnInit, OnDestroy {
     this.isVideoActive = true;
     this.capturedFrame = null;
 
+    // Clear state service
+    this.productStateService.clearState();
+
     setTimeout(() => this.startCamera(), 0);
   }
 
 
-  analyzeProduct(): void {
+  // viewDetails() {
+  //   if (this.aiAnalysisSection) {
+  //     this.aiAnalysisSection.nativeElement.scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'start'
+  //     });
+  //   }
+  // }
 
-    const user = this.authService.user$.value;
-    const payload: productInfo = {
-      product: this.product,
-      userPreferences: user?.preferences || {}
-    };
-
-    this.aiLoading = true;
-    this.aiService.analyzeProduct(payload)
-      .then(result => {
-        this.ngZone.run(() => {
-          this.aiAnalysis = result;
-
-          if (!this.aiAnalysis?.nutrients || this.aiAnalysis.nutrients.every(n => n.percent === null)) {
-            if (this.product.nutrient_levels) {
-              this.aiAnalysis.nutrients = this.mapNutrientLevels(this.product.nutrient_levels);
-            }
-          }
-
-          this.aiLoading = false;
-        });
-      })
-      .catch(err => {
-        console.error('AI analysis failed', err);
-        this.aiLoading = false;
-      });
-  }
-
-  private mapNutrientLevels(nutrientLevels: any) {
-    const mapping: any = {
-      high: { percent: 80, levelColor: 'warn' },
-      moderate: { percent: 50, levelColor: 'accent' },
-      low: { percent: 20, levelColor: 'primary' }
-    };
-
-    return Object.keys(nutrientLevels).map(key => {
-      const level = nutrientLevels[key];
-      return {
-        name: key,
-        percent: mapping[level]?.percent ?? null,
-        levelColor: mapping[level]?.levelColor ?? 'primary'
-      };
-    });
-  }
-
-  viewDetails() {
-    if (this.aiAnalysisSection) {
-      this.aiAnalysisSection.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  }
+  //  viewDetails() {
+  //   // Store product data in a service or pass via router state
+  //   this.router.navigate(['/product-details'], { 
+  //     state: { 
+  //       product: this.product,
+  //       barcode: this.barcode 
+  //     } 
+  //   });
+  // }
 
 }

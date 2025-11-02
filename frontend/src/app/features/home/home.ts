@@ -13,9 +13,9 @@ export class Home {
   ngOnInit(){
     this.authService.user$.subscribe(user => {
     if (user) {
-      console.log('👤 Current user from Firestore:', user);
+      console.log('Current user from Firestore:', user);
       if (user.preferences) {
-        console.log('🎯 Preferences:', user.preferences);
+        console.log('Preferences:', user.preferences);
       }
     }
   });

@@ -1,0 +1,287 @@
+<!-- product-details.component.html -->
+<div class="details-container">
+
+  <!-- Floating Action Button -->
+  <button class="fab-scan" (click)="scanAnother()" title="Scan Another Product">
+    <i class="bi bi-qr-code-scan"></i>
+  </button>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-5 text-center">
+          <div class="product-image-wrapper">
+            <img [src]="getProductImage()" class="product-hero-image" alt="{{product?.product_name}}">
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="product-header">
+            <h1 class="product-title">{{ product?.product_name || 'Product Details' }}</h1>
+            <p class="product-brand">{{ product?.brands || 'Unknown Brand' }}</p>
+
+            <div class="score-badges mt-4 mb-4">
+              <div class="score-card health-score" *ngIf="aiAnalysis">
+                <div class="score-value">{{ aiAnalysis.score }}</div>
+                <div class="score-label">Health Score</div>
+              </div>
+              <!-- <div class="score-card nutri-score">
+                <div class="score-value">{{ product?.nutri_score_grade?.toUpperCase() || 'N/A' }}</div>
+                <div class="score-label">NutriScore</div>
+              </div> -->
+              <div class="score-card eco-score">
+                <div class="score-value">{{ product?.ecoscore_grade?.toUpperCase()==='NOT-APPLICABLE'?'N/A':
+                  product?.ecoscore_grade?.toUpperCase() || 'N/A' }}</div>
+                <div class="score-label">EcoScore</div>
+              </div>
+              <div class="score-card nova-score" *ngIf="aiAnalysis?.productMeta?.novaGroup">
+                <div class="score-value">{{ aiAnalysis.productMeta.novaGroup }}</div>
+                <div class="score-label">NOVA</div>
+              </div>
+            </div>
+
+            <p class="product-quantity">
+              <i class="bi bi-box-seam me-2"></i>{{ product?.quantity || 'Quantity not specified' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Loading State -->
+  <div *ngIf="aiLoading" class="loading-section">
+    <div class="container text-center py-5">
+      <div class="ai-loader mb-3"></div>
+      <h4 class="text-success">Analyzing nutrition with AI...</h4>
+      <p class="text-muted">This will just take a moment</p>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid" *ngIf="!aiLoading">
+    <div class="container">
+
+      <!-- AI Summary Card -->
+      <div class="card-pinterest summary-card" *ngIf="aiAnalysis">
+        <div class="card-icon">
+          <i class="bi bi-lightbulb-fill"></i>
+        </div>
+        <h3>AI Health Insights</h3>
+        <p class="summary-text">{{ aiAnalysis.summary }}</p>
+        <div class="advice-box" *ngIf="aiAnalysis.advice">
+          <i class="bi bi-info-circle-fill me-2"></i>
+          {{ aiAnalysis.advice }}
+        </div>
+      </div>
+
+      <!-- Nutrients Grid -->
+      <div class="card-pinterest nutrients-card" *ngIf="hasNutrients()">
+        <div class="card-icon">
+          <i class="bi bi-pie-chart-fill"></i>
+        </div>
+        <h3>Nutritional Breakdown</h3>
+        <div class="nutrients-grid">
+          <div *ngFor="let n of aiAnalysis.nutrients | slice:0:6" class="nutrient-item">
+            <div class="circular-progress" [attr.data-percent]="n.percent">
+              <svg viewBox="0 0 36 36" class="circular-chart" [ngClass]="{
+                'chart-green': n.levelColor==='primary',
+                'chart-yellow': n.levelColor==='accent',
+                'chart-red': n.levelColor==='warn'
+              }">
+                <path class="circle-bg"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <path class="circle" [attr.stroke-dasharray]="(n.percent || 0) + ', 100'"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                <text x="18" y="20.35" class="percentage">{{ n.percent || 0 }}%</text>
+              </svg>
+            </div>
+            <div class="nutrient-name">{{ n.name }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Allergens Warning -->
+      <div class="card-pinterest alert-card" *ngIf="hasAllergens()">
+        <div class="card-icon alert-icon">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+        </div>
+        <h3>Allergen Alert</h3>
+        <div class="allergen-list">
+          {{ getAllergenText() }}
+        </div>
+      </div>
+
+      <!-- Alerts Section -->
+      <div class="card-pinterest alert-card" *ngIf="hasAlerts()">
+        <div class="card-icon alert-icon">
+          <i class="bi bi-shield-exclamation"></i>
+        </div>
+        <h3>Health Alerts</h3>
+        <ul class="alerts-list">
+          <li *ngFor="let alert of aiAnalysis?.alerts">
+            <i class="bi bi-dot"></i>{{ alert }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Additives Table -->
+      <div class="card-pinterest additives-card" *ngIf="hasAdditives()">
+        <div class="card-icon">
+          <i class="bi bi-prescription2"></i>
+        </div>
+        <h3>Additives Analysis</h3>
+        <div class="additives-table">
+          <div *ngFor="let a of aiAnalysis.additives" class="additive-row">
+            <div class="additive-code">{{ a.code }}</div>
+            <div class="additive-info">
+              <div class="additive-name">{{ a.name || 'Unknown' }}</div>
+              <div class="additive-purpose">{{ a.purpose || 'Purpose not specified' }}</div>
+              <div class="additive-notes" *ngIf="a.notes">{{ a.notes }}</div>
+            </div>
+            <div class="additive-risk">
+              <span class="risk-badge" [ngClass]="{
+                'risk-low': a.riskLevel === 'low',
+                'risk-moderate': a.riskLevel === 'moderate',
+                'risk-high': a.riskLevel === 'high'
+              }">
+                {{ a.riskLevel | titlecase }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Healthier Alternatives -->
+      <div class="alternatives-section" *ngIf="hasAlternatives()">
+        <h2 class="section-title">
+          <i class="bi bi-heart-pulse-fill text-success me-2"></i>
+          Healthier Alternatives
+        </h2>
+        <div class="alternatives-grid">
+          <div *ngFor="let alt of aiAnalysis.alternatives" class="alternative-card">
+            <div class="alt-image-wrapper">
+              <img [src]="alt.image || 'assets/placeholder.png'" alt="{{ alt.name }}">
+              <div class="alt-overlay">
+                <a [href]="alt.url" target="_blank" rel="noopener" class="view-amazon-btn">
+                  <i class="bi bi-cart-fill me-2"></i>View on Amazon
+                </a>
+              </div>
+            </div>
+            <div class="alt-content">
+              <h5 class="alt-name">{{ alt.name }}</h5>
+              <p class="alt-brand">{{ alt.brand || '—' }}</p>
+              <!-- <div class="alt-footer">
+                <span class="alt-price">{{ alt.price || '—' }}</span>
+                <span class="alt-rating" *ngIf="alt.rating">
+                  <i class="bi bi-star-fill"></i> {{ alt.rating }}
+                </span>
+              </div> -->
+              <p class="alt-reason" *ngIf="alt.reason">{{ alt.reason }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOMEMADE ALTERNATIVES SECTION -->
+      <div *ngIf="hasHomeAlternatives()" class="alternatives-section homemade-section">
+        <h2 class="section-title">
+          <i class="bi bi-house-heart-fill text-success me-2"></i>
+          Homemade Alternatives
+        </h2>
+        <p class="section-subtitle">Smart, nutritious swaps you can make yourself</p>
+
+        <div class="homemade-grid">
+          <div *ngFor="let recipe of aiAnalysis.homemadeAlternatives" class="homemade-card">
+
+            <!-- Recipe Info Header -->
+            <div class="recipe-header">
+              <div class="recipe-icon">
+                <i class="bi bi-egg-fried"></i>
+              </div>
+              <div class="recipe-title-area">
+                <h4 class="recipe-name">{{ recipe.name }}</h4>
+                <p class="recipe-description">{{ recipe.description }}</p>
+              </div>
+            </div>
+
+            <!-- Video Grid (if videos exist) -->
+            <div *ngIf="recipe.videos && recipe.videos.length > 0" class="recipe-videos">
+              <div *ngFor="let video of recipe.videos" class="video-card">
+
+                <!-- Video Thumbnail with Play Overlay -->
+                <a [href]="video.url" target="_blank" rel="noopener" class="video-thumbnail-link">
+                  <div class="video-thumbnail">
+                    <img [src]="video.thumbnail" [alt]="video.title" />
+                    <div class="video-overlay">
+                      <div class="play-button">
+                        <i class="bi bi-play-circle-fill"></i>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+
+                <!-- Video Info -->
+                <div class="video-info">
+                  <h5 class="video-title" [title]="video.title">{{ video.title }}</h5>
+                  <p class="video-channel">
+                    <i class="bi bi-person-circle me-1"></i>{{ video.channelTitle }}
+                  </p>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- No Videos Fallback -->
+            <div *ngIf="!recipe.videos || recipe.videos.length === 0" class="no-videos">
+              <i class="bi bi-search"></i>
+              <p>No video tutorials available</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- YOUTUBE HEALTHY ALTERNATIVES SECTION -->
+      <div *ngIf="hasVideos()" class="youtube-section">
+        <h2 class="section-title">
+          <i class="bi bi-youtube text-danger me-2"></i>
+          Expert Insights on YouTube
+        </h2>
+        <p class="section-subtitle">Expert-led insights & reviews</p>
+
+        <div class="youtube-grid">
+          <div *ngFor="let vid of aiAnalysis.videos" class="youtube-card">
+
+            <!-- Video Thumbnail with Play Overlay -->
+            <a [href]="vid.url" target="_blank" rel="noopener" class="youtube-thumbnail-link">
+              <div class="youtube-thumbnail-wrapper">
+                <img [src]="vid.thumbnail || 'assets/placeholder.png'" [alt]="vid.title"
+                  class="youtube-thumbnail-img" />
+                <div class="youtube-overlay">
+                  <div class="youtube-play-button">
+                    <i class="bi bi-play-circle-fill"></i>
+                  </div>
+                </div>
+              </div>
+            </a>
+
+            <!-- Video Info -->
+            <div class="youtube-info">
+              <h4 class="youtube-title" [title]="vid.title">{{ vid.title }}</h4>
+              <p class="youtube-channel">
+                <i class="bi bi-person-circle me-1"></i>{{ vid.channel }}
+              </p>
+              <div class="youtube-actions">
+                <a [href]="vid.url" target="_blank" class="youtube-watch-btn">
+                  <i class="bi bi-youtube me-1"></i> Watch on YouTube
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>

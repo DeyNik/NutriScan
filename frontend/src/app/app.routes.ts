@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { Preferences } from './features/preferences/preferences';
 import { OnboardingGuard } from './core/guards/onboarding.guard';
 import { Scanner } from './features/scanner/scanner';
+import { ProductDetails } from './features/product-details/product-details';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: 'preferences', component: Preferences, canActivate: [AuthGuard] }, 
   { path: 'home', component: Home, canActivate: [OnboardingGuard] },
   {path: 'scan', component: Scanner, canActivate: [OnboardingGuard]},
+  { path: 'product-details', component: ProductDetails, canActivate:[OnboardingGuard] },
   { path: '**', redirectTo: 'home' }
 ];
 

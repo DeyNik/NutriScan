@@ -88,7 +88,7 @@ export class Preferences {
         const user = this.authService.user$.value;
         if (!user) return;
 
-        // ❌ Block saving if no diet selected
+        // Block saving if no diet selected
         if (!this.diet) {
             this.showError = true;
             return;
@@ -99,7 +99,7 @@ export class Preferences {
             ref,
             {
                 preferences: {
-                    diet: this.diet, // ✅ always required
+                    diet: this.diet, // always required
                     allergies: this.allergies.length ? this.allergies : [],
                     healthConcerns: this.healthConcerns.length ? this.healthConcerns : [],
                 },

@@ -1,10 +1,277 @@
+// /* Container for the two-column layout */
+// .main-container {
+//   display: flex; /* Use Flexbox for side-by-side layout */
+//   flex-direction: column; /* Default to a single column on small screens */
+//   gap: 60px; /* Space between columns */
+//   width: 100%;
+//   max-width: 1000px;
+//   margin: 20px auto;
+//   padding: 0 15px;
+//   margin-top: 2rem;
+//   align-items: center;
+// }
+
+// /* Styles for the left column (camera) */
+// .left-column, .right-column {
+//   flex: 1; /* Make columns take up equal space */
+//   min-width: 300px; /* Prevent columns from getting too small */
+// }
+
+// /* On medium to large screens, switch to a row layout */
+// @media (min-width: 768px) {
+//   .main-container {
+//     flex-direction: row; /* Arrange items in a row */
+//   }
+// }
+
+// /* Your existing styles for the scanner-container and its contents */
+// .scanner-container {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   width: 100%;
+//   font-family: Arial, sans-serif;
+// }
+
+// .camera-section {
+//   position: relative;
+//   width: 100%;
+//   /* Adjust height to be proportional */
+//   height: 500px;
+//   padding-bottom: 75%; /* Maintain a 4:3 aspect ratio */
+//   border-radius: 12px;
+//   overflow: hidden;
+//   background: #000;
+//   margin-top: -0.5rem;
+// }
+
+// .camera-view {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   object-fit: cover;
+// }
+
+// /* Updated scan-frame to be larger and more central */
+// .scan-frame {
+//   position: absolute;
+//   top: 50%;
+//   left: 50%;
+//   width: 85%; /* Make the box larger */
+//   height: 40%;
+//   max-height: 250px;
+//   transform: translate(-50%, -50%);
+//   border: 4px dashed rgba(255, 255, 255, 0.7);
+//   border-radius: 10px;
+//   pointer-events: none;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .scan-line {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 4px;
+//   background: lime;
+//   animation: scanMove 2s infinite;
+// }
+
+// @keyframes scanMove {
+//   0% { top: 0; }
+//   50% { top: calc(100% - 4px); }
+//   100% { top: 0; }
+// }
+
+// .instructions {
+//   text-align: center;
+//   color: #333; /* A bit darker for better contrast */
+//   margin-top: 15px;
+// }
+
+// .capture-btn {
+//   position: absolute;
+//   bottom: 20px;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   padding: 12px 24px;
+//   font-size: 1.1rem;
+//   background-color: #0b84ff;
+//   color: #fff;
+//   border: none;
+//   border-radius: 8px;
+//   cursor: pointer;
+//   z-index: 10;
+//   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+//   transition: all 0.3s ease;
+// }
+
+// .capture-btn:hover {
+//   background-color: #066bd1;
+//   transform: translateX(-50%) scale(1.05);
+// }
+
+// .info-section {
+//   width: 100%;
+//   margin-top: 0; /* Remove top margin as it's handled by the parent container's gap */
+// }
+
+// /* Existing product-card and related styles go here */
+// .barcode-result, .not-found {
+//   padding: 15px;
+//   background: #f8f9fa;
+//   border-radius: 8px;
+//   margin-bottom: 15px;
+//   text-align: center;
+// }
+
+// .product-card {
+//    height: 500px; /* same as camera-section */
+//   overflow-y: auto; /* scroll if content exceeds height */
+//   padding: 20px;
+//   border-radius: 12px;
+//   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+//   background: #fff;
+// }
+
+// .product-card img {
+//   width: 100%;
+//   max-height: 250px;
+//   object-fit: contain;
+//   border-radius: 8px;
+//   margin-bottom: 15px;
+// }
+
+// .details-btn, .retry-btn {
+//   margin-right: 10px;
+//   padding: 10px 20px;
+//   background: #0b84ff;
+//   color: #fff;
+//   border: none;
+//   border-radius: 8px;
+//   cursor: pointer;
+//   transition: background-color 0.3s ease;
+// }
+
+// .details-btn:hover, .retry-btn:hover {
+//   background: #066bd1;
+// }
+
+
+// /* Keep your existing styles, just adding loader + right column tweaks */
+
+// /* Right column alignment */
+// .info-section {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   text-align: center;
+//   padding: 20px;
+// }
+
+// /* Loader styles */
+// .loader {
+//   border: 6px solid #f3f3f3;
+//   border-top: 6px solid #2e7d32; /* brand green */
+//   border-radius: 50%;
+//   width: 60px;
+//   height: 60px;
+//   margin: 20px auto;
+//   animation: spin 1s linear infinite;
+// }
+
+// @keyframes spin {
+//   0% { transform: rotate(0deg); }
+//   100% { transform: rotate(360deg); }
+// }
+
+// /* Buttons in info section */
+// .scan-btn, .retry-btn {
+//   margin-top: 15px;
+//   padding: 12px 28px;
+//   font-size: 1.1rem;
+//   background-color: #2e7d32;
+//   color: #fff;
+//   border: none;
+//   border-radius: 25px;
+//   cursor: pointer;
+//   transition: transform 0.2s, background-color 0.3s;
+// }
+
+// .scan-btn:hover, .retry-btn:hover {
+//   background-color: #256428;
+//   transform: scale(1.05);
+// }
+
+// /* Product card highlight */
+// .product-card {
+//   border-left: 6px solid #2e7d32;
+// }
+
+// /*bottom section*/
+// .bottom-info{
+//   margin: 5rem 3rem 3rem 3rem;
+
+//   .badge{
+//     color: white;
+//   }
+// }
+
+
+// .alternatives-section {
+//   margin-top: 2rem;
+//   .alt-cards {
+//     display: flex;
+//     flex-wrap: wrap;
+//     gap: 1rem;
+//   }
+//   .alt-card {
+//     flex: 1 1 30%;
+//     border: 1px solid #ddd;
+//     border-radius: 12px;
+//     padding: 1rem;
+//     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+//     img {
+//       width: 100%;
+//       border-radius: 8px;
+//       margin-bottom: 0.5rem;
+//     }
+//   }
+// }
+
+// .circular-chart {
+//   width: 80px;
+//   height: 80px;
+//   transform: rotate(-90deg);
+// }
+// .circle {
+//   transition: stroke-dasharray 0.6s ease;
+// }
+
+// .alt-card {
+//   transition: transform 0.2s ease, box-shadow 0.2s ease;
+//   border-radius: 0.75rem;
+// }
+// .alt-card:hover {
+//   transform: translateY(-4px);
+//   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+// }
+
+
+/* scanner.component.css */
+/* scanner.component.css */
+
 /* Container for the two-column layout */
 .main-container {
-  display: flex; /* Use Flexbox for side-by-side layout */
-  flex-direction: column; /* Default to a single column on small screens */
-  gap: 60px; /* Space between columns */
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 20px auto;
   padding: 0 15px;
   margin-top: 2rem;
@@ -13,18 +280,18 @@
 
 /* Styles for the left column (camera) */
 .left-column, .right-column {
-  flex: 1; /* Make columns take up equal space */
-  min-width: 300px; /* Prevent columns from getting too small */
+  flex: 1;
+  min-width: 300px;
 }
 
 /* On medium to large screens, switch to a row layout */
 @media (min-width: 768px) {
   .main-container {
-    flex-direction: row; /* Arrange items in a row */
+    flex-direction: row;
   }
 }
 
-/* Your existing styles for the scanner-container and its contents */
+/* Scanner container */
 .scanner-container {
   display: flex;
   flex-direction: column;
@@ -36,13 +303,11 @@
 .camera-section {
   position: relative;
   width: 100%;
-  /* Adjust height to be proportional */
   height: 500px;
-  padding-bottom: 75%; /* Maintain a 4:3 aspect ratio */
   border-radius: 12px;
   overflow: hidden;
   background: #000;
-  margin-top: -0.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .camera-view {
@@ -54,12 +319,11 @@
   object-fit: cover;
 }
 
-/* Updated scan-frame to be larger and more central */
 .scan-frame {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 85%; /* Make the box larger */
+  width: 85%;
   height: 40%;
   max-height: 250px;
   transform: translate(-50%, -50%);
@@ -87,84 +351,31 @@
   100% { top: 0; }
 }
 
-.instructions {
-  text-align: center;
-  color: #333; /* A bit darker for better contrast */
-  margin-top: 15px;
-}
-
 .capture-btn {
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 12px 24px;
+  padding: 12px 32px;
   font-size: 1.1rem;
-  background-color: #0b84ff;
+  background: linear-gradient(135deg, #2e7d32, #1b5e20);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 30px;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.4);
   transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .capture-btn:hover {
-  background-color: #066bd1;
+  background: linear-gradient(135deg, #1b5e20, #0d3e11);
   transform: translateX(-50%) scale(1.05);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.5);
 }
 
-.info-section {
-  width: 100%;
-  margin-top: 0; /* Remove top margin as it's handled by the parent container's gap */
-}
-
-/* Existing product-card and related styles go here */
-.barcode-result, .not-found {
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.product-card {
-   height: 500px; /* same as camera-section */
-  overflow-y: auto; /* scroll if content exceeds height */
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  background: #fff;
-}
-
-.product-card img {
-  width: 100%;
-  max-height: 250px;
-  object-fit: contain;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.details-btn, .retry-btn {
-  margin-right: 10px;
-  padding: 10px 20px;
-  background: #0b84ff;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.details-btn:hover, .retry-btn:hover {
-  background: #066bd1;
-}
-
-
-/* Keep your existing styles, just adding loader + right column tweaks */
-
-/* Right column alignment */
+/* Info Section */
 .info-section {
   display: flex;
   flex-direction: column;
@@ -176,7 +387,7 @@
 /* Loader styles */
 .loader {
   border: 6px solid #f3f3f3;
-  border-top: 6px solid #2e7d32; /* brand green */
+  border-top: 6px solid #2e7d32;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -189,34 +400,79 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Buttons in info section */
-.scan-btn, .retry-btn {
-  margin-top: 15px;
-  padding: 12px 28px;
-  font-size: 1.1rem;
-  background-color: #2e7d32;
-  color: #fff;
+/* Product Preview Card */
+.product-preview-card {
+  height: 500px;
+  overflow-y: auto;
+  border-radius: 12px;
+}
+
+.product-preview-card .card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+  border: 2px solid #e8f5e9;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.quick-info {
+  margin: 1rem 0;
+}
+
+.quick-info .badge {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #2e7d32, #1b5e20);
   border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.3s;
+  font-weight: 600;
+  //transition: all 0.3s ease;
 }
 
-.scan-btn:hover, .retry-btn:hover {
-  background-color: #256428;
-  transform: scale(1.05);
+.btn-success:hover {
+  background: linear-gradient(135deg, #1b5e20, #0d3e11);
+  //transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.3);
 }
 
-/* Product card highlight */
-.product-card {
-  border-left: 6px solid #2e7d32;
+.btn-outline-secondary {
+  border: 2px solid #66bb6a;
+  color: #2e7d32;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-/*bottom section*/
-.bottom-info{
-  margin: 5rem 3rem 3rem 3rem;
+.btn-outline-secondary:hover {
+  background: #66bb6a;
+  color: white;
+  border-color: #66bb6a;
+  transform: translateY(-2px);
+}
 
-  .badge{
-    color: white;
+/* Responsive */
+@media (max-width: 768px) {
+  .camera-section {
+    height: 400px;
+  }
+
+  .product-preview-card {
+    height: auto;
+    min-height: 400px;
+  }
+
+  .main-container {
+    gap: 30px;
   }
 }

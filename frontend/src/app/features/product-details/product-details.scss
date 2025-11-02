@@ -1,0 +1,953 @@
+/* ============================================
+   PRODUCT DETAILS COMPONENT - MASTER STYLES
+   ============================================ */
+
+/* ==================== BASE ==================== */
+.details-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+  padding-bottom: 4rem;
+}
+
+/* ==================== FLOATING ACTION BUTTON ==================== */
+.fab-scan {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.4);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-scan:hover {
+  transform: scale(1.1) rotate(10deg);
+  box-shadow: 0 12px 32px rgba(46, 125, 50, 0.5);
+}
+
+.fab-scan:active {
+  transform: scale(0.95);
+}
+
+/* ==================== HERO SECTION ==================== */
+.hero-section {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f8e9 100%);
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+}
+
+.product-image-wrapper {
+  position: relative;
+  padding: 2rem;
+}
+
+.product-hero-image {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 24px;
+  transition: transform 0.3s ease;
+}
+
+.product-hero-image:hover {
+  transform: scale(1.05);
+}
+
+.product-header {
+  padding: 2rem;
+}
+
+.product-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1b5e20;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.product-brand {
+  font-size: 1.3rem;
+  color: #66bb6a;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.product-quantity {
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: 1rem;
+}
+
+/* ==================== SCORE BADGES ==================== */
+.score-badges {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.score-card {
+  flex: 1;
+  min-width: 100px;
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.score-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.health-score {
+  border-color: #4caf50;
+}
+
+.nutri-score {
+  border-color: #2e7d32;
+}
+
+.eco-score {
+  border-color: #66bb6a;
+}
+
+.nova-score {
+  border-color: #81c784;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 0.5rem;
+}
+
+.score-label {
+  font-size: 0.85rem;
+  color: #757575;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ==================== LOADING STATE ==================== */
+.loading-section {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-loader {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #e8f5e9;
+  border-top: 5px solid #2e7d32;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==================== PINTEREST-STYLE CARDS ==================== */
+.content-grid {
+  padding: 2rem 0;
+}
+
+.card-pinterest {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-pinterest::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2e7d32, #66bb6a, #81c784);
+}
+
+.card-pinterest:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #2e7d32, #1b5e20);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.alert-icon {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+}
+
+.card-pinterest h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1b5e20;
+  margin-bottom: 1.5rem;
+}
+
+/* ==================== SUMMARY CARD ==================== */
+.summary-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #424242;
+  margin-bottom: 1.5rem;
+}
+
+.advice-box {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  padding: 1.5rem;
+  border-radius: 16px;
+  border-left: 4px solid #2e7d32;
+  font-size: 1rem;
+  color: #1b5e20;
+  font-weight: 500;
+}
+
+/* ==================== NUTRIENTS GRID ==================== */
+.nutrients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.nutrient-item {
+  text-align: center;
+}
+
+.circular-progress {
+  margin: 0 auto 1rem;
+  width: 100px;
+  height: 100px;
+}
+
+.circular-chart {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #f0f0f0;
+  stroke-width: 2.5;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.6s ease;
+}
+
+.chart-green .circle {
+  stroke: #4caf50;
+}
+
+.chart-yellow .circle {
+  stroke: #ffc107;
+}
+
+.chart-red .circle {
+  stroke: #f44336;
+}
+
+.percentage {
+  fill: #333;
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-anchor: middle;
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+.nutrient-name {
+  font-size: 0.95rem;
+  color: #555;
+  font-weight: 500;
+}
+
+/* ==================== ALERT CARDS ==================== */
+.allergen-list {
+  background: #fff3e0;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #ff9800;
+  font-size: 1.1rem;
+  color: #e65100;
+  font-weight: 600;
+}
+
+.alerts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.alerts-list li {
+  padding: 1rem;
+  background: #ffebee;
+  margin-bottom: 0.75rem;
+  border-radius: 12px;
+  color: #c62828;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.alerts-list li i {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+/* ==================== ADDITIVES TABLE ==================== */
+.additives-table {
+  margin-top: 1.5rem;
+}
+
+.additive-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.additive-row:hover {
+  background: #f5f5f5;
+  transform: translateX(8px);
+}
+
+.additive-code {
+  font-weight: 700;
+  color: #2e7d32;
+  font-size: 1.1rem;
+  min-width: 80px;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.additive-info {
+  flex: 1;
+}
+
+.additive-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+.additive-purpose {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.additive-notes {
+  color: #888;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+.additive-risk {
+  min-width: 100px;
+}
+
+.risk-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.risk-low {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.risk-moderate {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.risk-high {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* ==================== AMAZON ALTERNATIVES SECTION ==================== */
+.alternatives-section {
+  margin-top: 3rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1b5e20;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.alternatives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.alternative-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.alternative-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+}
+
+.alt-image-wrapper {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.alt-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.alternative-card:hover .alt-image-wrapper img {
+  transform: scale(1.1);
+}
+
+.alt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.alternative-card:hover .alt-overlay {
+  opacity: 1;
+}
+
+.view-amazon-btn {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.view-amazon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.5);
+  color: white;
+}
+
+.alt-content {
+  padding: 1.5rem;
+}
+
+.alt-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.alt-brand {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.alt-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.alt-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+.alt-rating {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.alt-reason {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ==================== HOMEMADE ALTERNATIVES SECTION ==================== */
+.homemade-section {
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+.homemade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.homemade-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+.homemade-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(46, 125, 50, 0.15);
+  border-color: #66bb6a;
+}
+
+.recipe-header {
+  padding: 2rem;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.recipe-icon {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.recipe-title-area {
+  flex: 1;
+}
+
+.recipe-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1b5e20;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.recipe-description {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.recipe-videos {
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+/* Scoped video card for homemade recipes */
+.recipe-videos .video-card {
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.recipe-videos .video-card:hover {
+  background: #f5f5f5;
+  border-color: #66bb6a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.video-thumbnail-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+}
+
+.video-thumbnail {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background: #000;
+  overflow: hidden;
+}
+
+.video-thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recipe-videos .video-card:hover .video-thumbnail img {
+  transform: scale(1.05);
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.6) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-thumbnail-link:hover .video-overlay {
+  opacity: 1;
+}
+
+.play-button {
+  font-size: 4rem;
+  color: white;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.video-thumbnail-link:hover .play-button {
+  transform: scale(1.15);
+}
+
+.video-info {
+  padding: 1rem;
+}
+
+.video-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.video-channel {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.no-videos {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #999;
+}
+
+.no-videos i {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.no-videos p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ==================== YOUTUBE ALTERNATIVES SECTION ==================== */
+.youtube-section {
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+}
+
+.youtube-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.youtube-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #f5f5f5;
+}
+
+.youtube-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  border-color: #ff0000;
+}
+
+.youtube-thumbnail-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+}
+
+.youtube-thumbnail-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background: #000;
+  overflow: hidden;
+}
+
+.youtube-thumbnail-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.youtube-card:hover .youtube-thumbnail-img {
+  transform: scale(1.08);
+}
+
+.youtube-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.youtube-thumbnail-link:hover .youtube-overlay {
+  opacity: 1;
+}
+
+.youtube-play-button {
+  font-size: 4.5rem;
+  color: #ff0000;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+  transition: all 0.3s ease;
+}
+
+.youtube-thumbnail-link:hover .youtube-play-button {
+  transform: scale(1.2);
+  color: white;
+}
+
+.youtube-info {
+  padding: 1.25rem;
+}
+
+.youtube-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #212121;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.8em;
+}
+
+.youtube-channel {
+  font-size: 0.9rem;
+  color: #606060;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.youtube-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.youtube-watch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ff0000;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.youtube-watch-btn:hover {
+  background: #ffebee;
+  color: #c62828;
+  transform: translateX(4px);
+}
+
+.youtube-watch-btn i {
+  font-size: 1.1rem;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+  .product-title {
+    font-size: 2rem;
+  }
+
+  .score-badges {
+    justify-content: center;
+  }
+
+  .nutrients-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .alternatives-grid,
+  .youtube-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .homemade-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-header {
+    padding: 1.5rem;
+  }
+
+  .recipe-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .recipe-name {
+    font-size: 1.2rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .fab-scan {
+    bottom: 1rem;
+    right: 1rem;
+    width: 56px;
+    height: 56px;
+    font-size: 1.3rem;
+  }
+
+  .youtube-play-button {
+    font-size: 3.5rem;
+  }
+}

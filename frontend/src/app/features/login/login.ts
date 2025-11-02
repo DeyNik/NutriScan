@@ -16,6 +16,7 @@ export class Login {
   email: string = '';
   password: string = '';
   errorMsg: string = '';
+  loginErrorMsg: string = '';
 
   // Signup form fields
   signupName = '';
@@ -44,7 +45,7 @@ export class Login {
         this.router.navigate(['/home']);
       })
       .catch(err => {
-        this.errorMsg = err.message;
+        this.loginErrorMsg = err.message;
       });
   }
 

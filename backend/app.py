@@ -1,7 +1,5 @@
 # backend/app.py
-from http.client import HTTPException
-import json
-import re
+from fastapi import FastAPI, HTTPException
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from ultralytics import YOLO
@@ -10,17 +8,8 @@ import numpy as np
 import warnings
 import logging
 import zxingcpp
-import os
-from dotenv import load_dotenv
-import google.generativeai as genai
+import requests
 from pydantic import BaseModel
-
-# Load .env
-load_dotenv()
-
-# Configure Gemini client
-genai.configure(api_key=os.getenv("OPENAI_API_KEY"))
-model = genai.GenerativeModel(os.getenv("OPENAI_MODEL"))
 
 class ScanRequest(BaseModel):
     product: dict          # Product data from Open Food Facts
@@ -130,77 +119,85 @@ async def scan_barcode_v5(file: UploadFile = File(...)):
 
     return {"barcodes": list(set(barcodes)) if barcodes else None}
 
-def safe_parse_json(text: str):
-    match = re.search(r'\{.*\}', text, re.DOTALL)
-    if not match:
-        raise ValueError("No JSON found in AI response")
-    return json.loads(match.group())
 
-color_map = {'green': 'primary', 'orange': 'accent', 'red': 'warn'}
-
-@app.post("/analyze/")
-
-@app.post("/analyze/")
-async def analyze_product(scan: ScanRequest):
-    product = scan.product
-    prefs = scan.user_preferences
-
-    prompt = f"""
-    You are a nutrition expert. Return ONLY a valid JSON object analyzing the product.
-    Product: {product.get('product_name')}
-    User preferences: {prefs}
-    """
-
-    # Call AI model
-    response = model.generate_content(prompt)
-    raw_text = response.text
-    print("Raw AI response:", raw_text)  # Make sure this prints in server logs
-
-    # Attempt to extract JSON from text
+@app.post("/recommend/")
+async def recommend_healthier(scan_req: ScanRequest):
     try:
-        # First try direct JSON parse
-        result = json.loads(raw_text)
-    except json.JSONDecodeError:
-        # Try to extract JSON substring (common if AI prepends/explains)
-        match = re.search(r'\{.*\}', raw_text, re.DOTALL)
-        if match:
-            try:
-                result = json.loads(match.group())
-            except json.JSONDecodeError as e:
-                print("JSON extraction failed:", e)
-                raise HTTPException(status_code=500, detail=f"Invalid JSON from AI: {raw_text[:200]}")
-        else:
-            raise HTTPException(status_code=500, detail=f"No JSON found in AI response: {raw_text[:200]}")
+        product = scan_req.product
+        user_prefs = scan_req.user_preferences
 
-    return result
+        # --- Validate Inputs ---
+        if not product:
+            raise HTTPException(status_code=400, detail="Missing product data.")
+        if not user_prefs:
+            raise HTTPException(status_code=400, detail="Missing user preferences.")
 
+        # --- Extract Product Category ---
+        categories = (
+            product.get("categories_tags") or
+            product.get("categories_hierarchy") or
+            [product.get("category")] if product.get("category") else []
+        )
+        if not categories:
+            raise HTTPException(status_code=404, detail="No category data found for product.")
 
-# async def analyze_product(scan: ScanRequest):
-    product = scan.product
-    prefs = scan.user_preferences
+        category = categories[-1]  # Most specific category
+        url = f"https://world.openfoodfacts.org/category/{category}.json?page_size=100"
 
-    if not product:
-        raise HTTPException(status_code=400, detail="Product data is required")
+        # --- Fetch Category Data ---
+        response = requests.get(url, timeout=10)
+        if response.status_code != 200:
+            raise HTTPException(status_code=502, detail=f"Failed to fetch data from OpenFoodFacts (status {response.status_code})")
 
-    prompt = f"""
-        You are a nutrition expert. Analyze the following product ingredients and nutritional info:
-        Product: {product.get('product_name')}
-        Brand: {product.get('brands')}
-        Ingredients: {product.get('ingredients_text', 'Unknown')}
-        Nutrients: {product.get('nutrient_levels', {})}
-        Allergens: {product.get('allergens', 'None')}
-        User preferences: {prefs}
-        Return valid JSON as specified
-    """
+        data = response.json()
+        candidates = data.get("products", [])
+        if not candidates:
+            raise HTTPException(status_code=404, detail="No candidate products found in category.")
 
-    response = model.generate_content(prompt)
+        # --- Health Score Logic ---
+        def health_score(p):
+            nutr = p.get("nutriments", {})
+            score = 0
+            if "nutri_score_grade" in p:
+                score += {"a": 5, "b": 4, "c": 3, "d": 2, "e": 1}.get(p["nutri_score_grade"], 0)
+            score += max(0, 5 - nutr.get("sugars_100g", 0) / 5)
+            score += max(0, 5 - nutr.get("saturated-fat_100g", 0) / 2)
+            score += max(0, 5 - nutr.get("salt_100g", 0) / 0.5)
+            score += nutr.get("fiber_100g", 0) / 2
+            score += nutr.get("protein_100g", 0) / 5
+            return score
 
-    try:
-        result = safe_parse_json(response.text)
-        result['color'] = color_map.get(result.get('color'), 'primary')
-        for n in result.get('nutrients', []):
-            n['levelColor'] = color_map.get(n.get('levelColor'), 'primary')
+        base_score = health_score(product)
+        scored = [
+            {**p, "health_score": health_score(p)}
+            for p in candidates if "nutriments" in p
+        ]
+        healthier = [p for p in scored if p["health_score"] > base_score]
+        healthier.sort(key=lambda x: x["health_score"], reverse=True)
+
+        # --- Take Top 5 Healthier Alternatives ---
+        top5 = [
+            {
+                "name": p.get("product_name"),
+                "brand": p.get("brands"),
+                "image": p.get("image_small_url"),
+                "nutri_score": p.get("nutri_score_grade"),
+                "url": p.get("url"),
+            }
+            for p in healthier[:5]
+        ]
+
+        # --- Fallback: If No Healthier Alternatives ---
+        if not top5:
+            return {
+                "message": "No healthier alternatives found in the same category.",
+                "recommendations": [],
+            }
+
+        return {"recommendations": top5}
+
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"External API error: {str(e)}")
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"AI response invalid JSON: {e}")
-
-    return result
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
