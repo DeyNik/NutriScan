@@ -17,7 +17,7 @@ export class App {
 
   isLoggedIn = false;
 
-  protected readonly title = signal('nutriScan');
+  protected readonly title = signal('healthiCode');
 
   constructor(private dialog: MatDialog, private authService: AuthService, private router: Router, private auth: Auth) {
     this.router.events
